@@ -112,6 +112,8 @@ input::placeholder {
 }
 
 #sort-btn {
+  width: 100%;
+  text-align: left;
   background-color: transparent;
   outline: none;
   border: none;
