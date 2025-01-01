@@ -1,1 +1,3 @@
-# sorting-algorithm_vizualizer
+# Sorting Algorithm Visualizer:
+
+  a sorting algorithm visualizer 
