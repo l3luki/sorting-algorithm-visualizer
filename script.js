@@ -9,12 +9,16 @@ const sortingContainer = document.getElementById("sorting-container")
 const items = [...document.getElementsByClassName("item")];
 
 let currentSortType = bubbleSort;
+let itemAmount = 100;
 let currentDelay = 40;
 let sortingIsFinished = true;
 let sortable = false;
 
 
 items.forEach((item, index) => {
+  const style = getComputedStyle(sortingContainer);
+  const width = parseInt(style.getPropertyValue("width"));
+  item.style.width = `${width / itemAmount}px`
   item.style.height = `${(index + 1) * 5}px`;
 });
 
@@ -30,30 +34,37 @@ function setItems() {
 function randomizeItems() {
   for (let i = items.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
+    items[i].style.order = j;
+    items[j].style.order = i;
     [items[i], items[j]] = [items[j], items[i]];
   }
-  setItems();
   sortable = true;
 }
 
-function delay(ms = 40) {
-  return new Promise((resolve) => setTimeout(resolve, ms)); // Delay function returning a promise
+function delay(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function bubbleSort(ms) {
+  console.log(ms);
   sortingIsFinished = false;
   for (let i = 0; i < items.length - 1; i++) {
     for (let j = 0; j < items.length - 1 - i; j++) {
+      items[j].style.backgroundColor = "Red";
+      await delay(ms);
+      items[j + 1].style.backgroundColor = "Red";
+      items[j].style.backgroundColor = "White"
+      await delay(ms);
+      items[j].style.backgroundColor = "Red"
+      await delay(ms);
       if (parseInt(items[j].id) > parseInt(items[j + 1].id)) {
-        items[j].style.backgroundColor = "Red";
-        items[j + 1].style.backgroundColor = "Red";
-        [items[j], items[j + 1]] = [items[j + 1], items[j]];
         items[j].style.order = j + 1;
         items[j + 1].style.order = j;
-        await delay(ms);
+        [items[j], items[j + 1]] = [items[j + 1], items[j]];
       }
       items[j].style.backgroundColor = "White";
       items[j + 1].style.backgroundColor = "White";
+      await delay(ms)
     }
   }
   sortingIsFinished = true;
@@ -89,24 +100,31 @@ async function insertionSort(ms) {
   sortable = false;
 }
 
-function selectionSort() {
+async function selectionSort() {
   sortingIsFinished = false;
 console.log("started");
   for (let i = 0; i < items.length; i++) {
-    
-    let minIndex = 0;
-    for (let j = i; j < items.length; j++) {
-      if (items[j].id < items[minIndex].id) {
-        [items[j], items[minIndex]] = [items[minIndex], items[j]];
-        items[j].style.order = minIndex;
-        items[minIndex].style.order = j;
+    let minIndex = i;
+    let j = i + 1;
+    await delay();
+    while (j < items.length) {
+      if (parseInt(items[j].id) < parseInt(items[minIndex].id)) {
+        console.log("switched: " + items[j].id, items[minIndex].id);
         minIndex = j;
-        console.log(`switched ${items[j]} and ${items[minIndex]}`)
       }
+       
+      j++;
     }
+     
+    console.log(minIndex, i);
+     
+    items[i].style.order = minIndex;
+    items[minIndex].style.order = i;
+    [items[i], items[minIndex]] = [items[minIndex], items[i]]; 
   }
+  console.log(items);
   sortingIsFinished = true;
-  sortable = true;
+  sortable = false;
 }
 
 function changeSortTypeSelection(sortName, sortFunction, sortId) {
@@ -142,8 +160,7 @@ selectionSortSelector.addEventListener("click", () => {
 sortButton.addEventListener("click", () => {
   if (sortingIsFinished) {
     if (sortable) {
-      console.log(timeInput.value);
-      currentSortType(timeInput.value)
+      currentSortType(timeInput.value ? timeInput.value : 40); 
       sortButton.textContent = "randomize"
     } else {
       randomizeItems();
