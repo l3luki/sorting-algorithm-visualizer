@@ -2,8 +2,8 @@ const bubbleSortSelector = document.getElementById("bubble-sort-btn");
 const insertionSortSelector = document.getElementById("insertion-sort-btn");
 const selectionSortSelector = document.getElementById("selection-sort-btn");
 const selectors = document.getElementsByClassName("selector");
-const timeInput = document.getElementById("delay-input");
-const amountInput = document.getElementById("amount");
+const delayInput = document.getElementById("delay-input");
+const itemAmountInput = document.getElementById("item-amount-input");
 const sortButton = document.getElementById("sort-btn");
 const sortingContainer = document.getElementById("sorting-container")
 const items = [...document.getElementsByClassName("item")];
@@ -42,12 +42,11 @@ function randomizeItems() {
   sortable = true;
 }
 
-function delay(ms) {
+function delay(ms = 40) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 async function bubbleSort(ms) {
-  console.log(ms);
   sortingIsFinished = false;
   for (let i = 0; i < items.length - 1; i++) {
     for (let j = 0; j < items.length - 1 - i; j++) {
@@ -143,9 +142,7 @@ function changeSortTypeSelection(sortName, sortFunction, sortId) {
   }
 }
 
-function changeItemAmount () {
 
-}
 
 
 bubbleSortSelector.addEventListener("click", () => {
@@ -163,7 +160,7 @@ selectionSortSelector.addEventListener("click", () => {
 sortButton.addEventListener("click", () => {
   if (sortingIsFinished) {
     if (sortable) {
-      currentSortType(timeInput.value ? timeInput.value : 40); 
+      currentSortType(currentDelay); 
       sortButton.textContent = "randomize"
     } else {
       randomizeItems();
@@ -175,7 +172,7 @@ sortButton.addEventListener("click", () => {
 sortingContainer.addEventListener("click", () => {
   if (sortingIsFinished) {
     if (sortable) {
-      currentSortType(parseInt(timeInput.value));
+      currentSortType(parseInt(delayInput.value));
       sortButton.textContent = "randomize"
     } else {
       randomizeItems();
@@ -183,6 +180,10 @@ sortingContainer.addEventListener("click", () => {
     }
   }
 });
+
+delayInput.addEventListener("input", () => {
+  currentDelay = delayInput.value;
+})
 
 
 
