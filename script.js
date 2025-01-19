@@ -7,6 +7,7 @@ const amountInput = document.getElementById("amount");
 const sortButton = document.getElementById("sort-btn");
 const sortingContainer = document.getElementById("sorting-container")
 const items = [...document.getElementsByClassName("item")];
+const clickSound = document.getElementById("click-audio");
 
 let currentSortType = bubbleSort;
 let itemAmount = 100;
@@ -14,12 +15,12 @@ let currentDelay = 40;
 let sortingIsFinished = true;
 let sortable = false;
 
-
 items.forEach((item, index) => {
   const style = getComputedStyle(sortingContainer);
   const width = parseInt(style.getPropertyValue("width"));
   item.style.width = `${width / itemAmount}px`
   item.style.height = `${(index + 1) * 5}px`;
+  clickSound.play();
 });
 
 setItems();
@@ -61,6 +62,8 @@ async function bubbleSort(ms) {
         items[j].style.order = j + 1;
         items[j + 1].style.order = j;
         [items[j], items[j + 1]] = [items[j + 1], items[j]];
+        clickSound.play();
+        clickSound.pause();
       }
       items[j].style.backgroundColor = "White";
       items[j + 1].style.backgroundColor = "White";
@@ -78,11 +81,11 @@ async function insertionSort(ms) {
     while (j > 0) {
       if (parseInt(items[j - 1].id) > parseInt(items[j].id)) {
         items[j].style.backgroundColor = "Red";
+        await delay(ms);
         items[j - 1].style.backgroundColor = "Red";
         items[j - 1].style.order = j;
         items[j].style.order = j - 1;
         
-        await delay(ms);
         
         [items[j - 1], items[j]] = [items[j], items[j - 1]];
         
