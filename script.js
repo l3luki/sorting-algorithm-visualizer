@@ -52,8 +52,8 @@ async function bubbleSort(ms) {
     for (let j = 0; j < items.length - 1 - i; j++) {
       items[j].style.backgroundColor = "Red";
       await delay(ms);
-      items[j + 1].style.backgroundColor = "Red";
-      items[j].style.backgroundColor = "White"
+      items[j].style.backgroundColor = "White";
+      items[j + 1].style.backgroundColor = "Red"
       await delay(ms);
       items[j].style.backgroundColor = "Red"
       await delay(ms);
@@ -61,11 +61,14 @@ async function bubbleSort(ms) {
         items[j].style.order = j + 1;
         items[j + 1].style.order = j;
         [items[j], items[j + 1]] = [items[j + 1], items[j]];
-        clickSound.play();
-        clickSound.pause();
+        console.log("switched")
       }
+
+      await delay(ms)
+      
       items[j].style.backgroundColor = "White";
       items[j + 1].style.backgroundColor = "White";
+
       await delay(ms)
     }
   }
@@ -75,23 +78,28 @@ async function bubbleSort(ms) {
 
 async function insertionSort(ms) {
   for (let i = 1; i < items.length; i++) {
+    console.log(i);
     sortingIsFinished = false;
-    let j = i
+    let j = i;
     while (j > 0) {
       if (parseInt(items[j - 1].id) > parseInt(items[j].id)) {
         items[j].style.backgroundColor = "Red";
         await delay(ms);
+        items[j].style.backgroundColor = "White"
         items[j - 1].style.backgroundColor = "Red";
+        await delay(ms);  
+        items[j].style.backgroundColor = "Red";
+        await delay(ms);
         items[j - 1].style.order = j;
         items[j].style.order = j - 1;
-        
-        
+  
         [items[j - 1], items[j]] = [items[j], items[j - 1]];
         
         items[j - 1].style.backgroundColor = "White"; 
         items[j].style.backgroundColor = "White"
         
         j--;
+        console.log(j)
       } else {
         break;
       }
@@ -102,27 +110,50 @@ async function insertionSort(ms) {
   sortable = false;
 }
 
-async function selectionSort() {
+async function selectionSort(ms) {
   sortingIsFinished = false;
 console.log("started");
-  for (let i = 0; i < items.length; i++) {
-    let minIndex = i;
-    let j = i + 1;
-    await delay();
-    while (j < items.length) {
-      if (parseInt(items[j].id) < parseInt(items[minIndex].id)) {
-        console.log("switched: " + items[j].id, items[minIndex].id);
-        minIndex = j;
-      }
-       
-      j++;
+
+for (let i = 0; i < items.length; i++) {
+
+  await delay(ms);
+
+  let minIndex = i;
+  let j = i + 1;
+
+  items[minIndex].style.backgroundColor = "Red";
+
+  console.log("red");
+
+  await delay(ms);
+
+  while (j < items.length) {
+    const temp = j;
+    items[j].style.backgroundColor = "Red";
+    await delay(ms);
+    if (parseInt(items[j].id) < parseInt(items[minIndex].id)) {
+      items[minIndex].style.backgroundColor = "White"
+      await delay(ms);
+      minIndex = j;
+      items[minIndex].style.backgroundColor = "Red"
+      console.log("back to red");
     }
-     
-    console.log(minIndex, i);
-     
+      
+    await delay(ms);
+
+    items[temp].style.backgroundColor = "Red";
+    j++;
+  } 
+    await delay(ms);
+    
     items[i].style.order = minIndex;
     items[minIndex].style.order = i;
     [items[i], items[minIndex]] = [items[minIndex], items[i]]; 
+
+    await delay(ms);
+    
+    items[i].style.backgroundColor = "White";
+    console.log("reset to white");
   }
   console.log(items);
   sortingIsFinished = true;
